@@ -6,9 +6,9 @@ namespace NetCoreGame
     class Player
     {
         public string playerName;
-        public string playerColor;
+        public System.ConsoleColor playerColor;
 
-        public Player (string _playerName, string _playerColor)
+        public Player (string _playerName, System.ConsoleColor _playerColor)
         {
             playerName = _playerName;
             playerColor = _playerColor;
@@ -61,7 +61,7 @@ namespace NetCoreGame
             int roll = RandomNum.Next(min, max);
 
             return roll;
-        }
+        }  // END method rollDice
 
         static string checkOddEven (int valueToCheck)
         {
@@ -79,7 +79,7 @@ namespace NetCoreGame
 
             //return checkResult;
             return oddEven;
-        }
+        } // END method checkOddEven
 
         static void Main(string[] args)
         {
@@ -104,7 +104,7 @@ namespace NetCoreGame
                 string cPlayerName = Console.ReadLine();
                 
                 Console.WriteLine("Color of Player " + i + ": ");
-                string cPlayerColor = Console.ReadLine();
+                System.ConsoleColor cPlayerColor = (ConsoleColor) Enum.Parse(typeof(ConsoleColor), Console.ReadLine(),true);
 
                 gameContestants[i-1] = new Player(cPlayerName,cPlayerColor);
             }
@@ -112,12 +112,14 @@ namespace NetCoreGame
             // initiate the game
             Game currentGame = new Game(maxGameRounds,maxGameTurns,gameContestants);
 
-
             // run turns until maxRounds is reached
             for (int i = 0; i < currentGame.gameRounds; i++)
             {
                 foreach (var currentPlayer in gameContestants)
                 {
+                    Console.ForegroundColor = currentPlayer.playerColor;
+                    Console.WriteLine(currentPlayer.playerName + " is playing...\n");
+
                     // create turn and run for current player
                     GameTurn currentTurn = new GameTurn(currentPlayer,currentGame.gameTurns);
 
@@ -173,10 +175,22 @@ namespace NetCoreGame
                             default:
                                 Console.WriteLine("I DON'T KNOW HOW I GOT HERE...");
                                 break;
-                        }
-                    }
-                }
-            }
-        }
-    }
+                        } // END switch oddEven
+                    } // END turnstate
+
+                // Restore the original console colors
+                Console.ResetColor();
+
+                } // END foreach player
+            } // END for gameRounds
+
+            // ------------------------
+            // all rounds played
+            // show results
+            // ------------------------
+
+
+
+        } // END method Main
+    } // END class Program
 }
